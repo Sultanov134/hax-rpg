@@ -8,7 +8,7 @@ class HaxRpg extends LitElement {
   static properties = {
     seed: { type: String },
     onFire: { type: Boolean },
-    walking: { type: Boolean },
+    walking: { type: Boolean, reflect: true },
     circle: { type: Boolean },
   };
 
@@ -164,21 +164,22 @@ class HaxRpg extends LitElement {
           ${this.renderSlider('Shirt', 'shirt', 0, 9, 1)}
           ${this.renderSlider('Skin', 'skin', 0, 9, 1)}
           ${this.renderSlider('Hat Color', 'hatcolor', 0, 9, 1)}
+          <wired-slider class="testing-slider" value=40>testing</wired-slider>
 
           <wired-checkbox
             name="onFire"
             .checked=${this.onFire}
-            @click=${(e) => (this.onFire = e.target.checked)} >On Fire?</wired-checkbox>
+            @input=${(e) => (this.onFire = e.target.checked)} >On Fire?</wired-checkbox>
 
           <wired-checkbox
             name="walking"
             .checked=${this.walking}
-            @click=${(e) => (this.walking = e.target.checked)}>Walking?</wired-checkbox>
+            @input=${(e) => (this.walking = e.target.checked)}>Walking?</wired-checkbox>
 
           <wired-checkbox
             name="circle"
             .checked=${this.circle}
-            @click=${(e) => (this.circle = e.target.checked)}>Circle?</wired-checkbox>
+            @input=${(e) => (this.circle = e.target.checked)}>Circle?</wired-checkbox>
 
           <wired-button @click=${() => this.generateShareableLink()}>Share Character</wired-button>
         </div>
