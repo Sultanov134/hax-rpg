@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit';
-import '@haxtheweb/rpg-character/rpg-character.js';
+import './rpg-character.js';
 import 'wired-elements/lib/wired-slider.js';
 import 'wired-elements/lib/wired-checkbox.js';
 import 'wired-elements/lib/wired-button.js';
