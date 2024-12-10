@@ -1,27 +1,48 @@
 import { LitElement, html, css } from 'lit';
-import './rpg-character.js';
+import '@haxtheweb/rpg-character/rpg-character.js';
 import 'wired-elements/lib/wired-slider.js';
 import 'wired-elements/lib/wired-checkbox.js';
 import 'wired-elements/lib/wired-button.js';
 
 class HaxRpg extends LitElement {
-  static properties = {
+  static get properties() {
+    return {
     seed: { type: String },
+    accessories: { type: String },
+    base: { type: String },
+    face: { type: String },
+    faceitem: { type: String },
+    hair: { type: String },
+    pants: { type: String },
+    shirt: { type: String },
+    skin: { type: String },
+    hatcolor: { type: String },
     onFire: { type: Boolean },
-    walking: { type: Boolean, reflect: true },
+    walking: { type: Boolean },
     circle: { type: Boolean },
   };
+}
 
   constructor() {
     super();
-    // Default seed: 10 characters, with "Leg" fixed to 0
-    this.seed = '1000000000';
+    // Initialize all attributes
+    this.accessories = "0";
+    this.base = "1";
+    this.face = "0";
+    this.faceitem = "0";
+    this.hair = "0";
+    this.pants = "0";
+    this.shirt = "0";
+    this.skin = "0";
+    this.hatcolor = "0";
     this.onFire = false;
     this.walking = false;
     this.circle = false;
+    this.seed = this.generateSeed(); // Generate the initial seed
   }
 
-  static styles = css`
+  static styles (){ 
+    return css`
     .container {
       display: flex;
       flex-direction: row;
@@ -42,20 +63,6 @@ class HaxRpg extends LitElement {
       border-radius: 10px;
       background-color: #f9f9f9;
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .character {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      height: 400px;
-    }
-
-    rpg-character {
-      height: 100%;
-      width: auto;
-      display: block;
     }
 
     .form-panel {
@@ -81,59 +88,42 @@ class HaxRpg extends LitElement {
       text-align: right;
       font-weight: bold;
     }
+
   `;
+  }
 
+  // Generate the seed dynamically
+  generateSeed() {
+    return (
+      this.accessories +
+      this.base +
+      "0" + // Leg is always 0
+      this.face +
+      this.faceitem +
+      this.hair +
+      this.pants +
+      this.shirt +
+      this.skin +
+      this.hatcolor
+    );
+  }
 
-  updateCharacterPart(name, value) {
-    const indexMap = {
-      accessories: 0,
-      base: 1,
-      face: 3,
-      faceitem: 4,
-      hair: 5,
-      pants: 6,
-      shirt: 7,
-      skin: 8,
-      hatcolor: 9,
-    };
-
-    const position = indexMap[name];
-    const updatedSeed =
-      this.seed.substring(0, position) +
-      value.toString() +
-      this.seed.substring(position + 1);
-
-    this.seed = updatedSeed; // Update the seed
+  // Update an attribute and regenerate the seed
+  updateAttribute(name, value) {
+    this[name] = value;
+    this.seed = this.generateSeed(); // Regenerate the seed
   }
 
   renderSlider(label, name, min, max, step) {
-    const indexMap = {
-      accessories: 0,
-      base: 1,
-      face: 3,
-      faceitem: 4,
-      hair: 5,
-      pants: 6,
-      shirt: 7,
-      skin: 8,
-      hatcolor: 9,
-    };
-    const position = indexMap[name];
-    const value = parseInt(this.seed[position], 10);
-
     return html`
       <div class="slider-container">
         <div class="slider-label">${label}:</div>
         <wired-slider
-          name=${name}
           min=${min}
           max=${max}
           step=${step}
-          .value=${value}
-          @input=${(e) => {
-            const newValue = parseInt(e.target.value, 10);
-            this.updateCharacterPart(name, newValue);
-          }}
+          .value=${this[name]}
+          @input=${(e) => this.updateAttribute(name, e.target.value)}
         ></wired-slider>
       </div>
     `;
@@ -142,18 +132,18 @@ class HaxRpg extends LitElement {
   render() {
     return html`
       <div class="container">
+        <!-- Character Panel -->
         <div class="character-panel">
-          <div class="character">
-            <rpg-character
-              .seed=${this.seed}
-              .fire=${this.onFire}
-              .walking=${this.walking}
-              .circle=${this.circle}
-            ></rpg-character>
-          </div>
+          <rpg-character
+            .seed=${this.seed}
+            .fire=${this.onFire}
+            .walking=${this.walking}
+            .circle=${this.circle}
+          ></rpg-character>
           <p>Seed: ${this.seed}</p>
         </div>
 
+        <!-- Form Panel -->
         <div class="form-panel">
           ${this.renderSlider('Accessories', 'accessories', 0, 9, 1)}
           ${this.renderSlider('Base', 'base', 1, 5, 1)}
@@ -164,24 +154,25 @@ class HaxRpg extends LitElement {
           ${this.renderSlider('Shirt', 'shirt', 0, 9, 1)}
           ${this.renderSlider('Skin', 'skin', 0, 9, 1)}
           ${this.renderSlider('Hat Color', 'hatcolor', 0, 9, 1)}
-          <wired-slider class="testing-slider" value=40>testing</wired-slider>
 
           <wired-checkbox
-            name="onFire"
             .checked=${this.onFire}
-            @input=${(e) => (this.onFire = e.target.checked)} >On Fire?</wired-checkbox>
+            @input=${(e) => (this.onFire = e.target.checked)}
+          >On Fire?</wired-checkbox>
 
           <wired-checkbox
-            name="walking"
             .checked=${this.walking}
-            @input=${(e) => (this.walking = e.target.checked)}>Walking?</wired-checkbox>
+            @input=${(e) => (this.walking = e.target.checked)}
+          >Walking?</wired-checkbox>
 
           <wired-checkbox
-            name="circle"
             .checked=${this.circle}
-            @input=${(e) => (this.circle = e.target.checked)}>Circle?</wired-checkbox>
+            @input=${(e) => (this.circle = e.target.checked)}
+          >Circle?</wired-checkbox>
 
-          <wired-button @click=${() => this.generateShareableLink()}>Share Character</wired-button>
+          <wired-button @click=${() => this.generateShareableLink()}>
+            Share Character
+          </wired-button>
         </div>
       </div>
     `;
