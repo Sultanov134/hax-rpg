@@ -1,31 +1,35 @@
-import { LitElement, html, css } from 'lit';
-import '@haxtheweb/rpg-character/rpg-character.js';
-import 'wired-elements/lib/wired-slider.js';
+import { LitElement, html, css } from "lit";
+import { DDDSuper} from '@haxtheweb/d-d-d/d-d-d.js';
+import 'wired-elements/lib/wired-combo.js';
+import 'wired-elements/lib/wired-item.js';
 import 'wired-elements/lib/wired-checkbox.js';
 import 'wired-elements/lib/wired-button.js';
+import "@haxtheweb/rpg-character/rpg-character.js";
+
 
 class HaxRpg extends LitElement {
   static get properties() {
     return {
-    seed: { type: String },
-    accessories: { type: String },
-    base: { type: String },
-    face: { type: String },
-    faceitem: { type: String },
-    hair: { type: String },
-    pants: { type: String },
-    shirt: { type: String },
-    skin: { type: String },
-    hatcolor: { type: String },
-    onFire: { type: Boolean },
-    walking: { type: Boolean },
-    circle: { type: Boolean },
-  };
-}
+      seed: { type: String },
+      accessories: { type: String },
+      base: { type: String },
+      face: { type: String },
+      faceitem: { type: String },
+      hair: { type: String },
+      pants: { type: String },
+      shirt: { type: String },
+      skin: { type: String },
+      hatcolor: { type: String },
+      hat: { type: String },
+      onFire: { type: Boolean },
+      walking: { type: Boolean },
+      circle: { type: Boolean },
+    };
+  }
 
   constructor() {
     super();
-    // Initialize all attributes
+    this.seed = "0000000000"; // Default seed
     this.accessories = "0";
     this.base = "1";
     this.face = "0";
@@ -35,14 +39,13 @@ class HaxRpg extends LitElement {
     this.shirt = "0";
     this.skin = "0";
     this.hatcolor = "0";
+    this.hat = "none";
     this.onFire = false;
     this.walking = false;
     this.circle = false;
-    this.seed = this.generateSeed(); // Generate the initial seed
   }
 
-  static styles (){ 
-    return css`
+  static styles = css`
     .container {
       display: flex;
       flex-direction: row;
@@ -51,80 +54,100 @@ class HaxRpg extends LitElement {
       height: 100vh;
       gap: 30px;
     }
-
-    .character-panel {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      flex: 1;
-      padding: 20px;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      background-color: #f9f9f9;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
+    .character-panel,
     .form-panel {
       display: flex;
       flex-direction: column;
-      flex: 1;
-      gap: 20px;
+      align-items: center;
       padding: 20px;
       border: 2px solid #ccc;
       border-radius: 10px;
       background-color: #f9f9f9;
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     }
-
-    .slider-container {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .dropdown-container {
+      margin-bottom: 16px;
     }
-
-    .slider-label {
-      flex: 0 0 120px;
-      text-align: right;
-      font-weight: bold;
+    wired-combo {
+      width: 100%;
     }
-
   `;
+
+  _getSeedIndex(key) {
+    const mapping = {
+      accessories: 0,
+      base: 1,
+      face: 3,
+      faceitem: 4,
+      hair: 5,
+      pants: 6,
+      shirt: 7,
+      skin: 8,
+      hatcolor: 9,
+    };
+    return mapping[key] ?? -1;
   }
 
-  // Generate the seed dynamically
-  generateSeed() {
-    return (
-      this.accessories +
-      this.base +
-      "0" + // Leg is always 0
-      this.face +
-      this.faceitem +
-      this.hair +
-      this.pants +
-      this.shirt +
-      this.skin +
-      this.hatcolor
-    );
+  _updateSeed(key, value) {
+    if (this[key] !== value) {
+      this[key] = value;
+      const seedArray = this.seed.padEnd(10, "0").split("");
+      const index = this._getSeedIndex(key);
+      if (index >= 0) {
+        seedArray[index] = value.toString();
+        const newSeed = seedArray.join("");
+        if (this.seed !== newSeed) {
+          this.seed = newSeed;
+          console.log(`Updated key: ${key}, value: ${value}, new seed: ${this.seed}`);
+        }
+      } else {
+        console.error(`Invalid key "${key}"`);
+      }
+    }
   }
-
-  // Update an attribute and regenerate the seed
-  updateAttribute(name, value) {
-    this[name] = value;
-    this.seed = this.generateSeed(); // Regenerate the seed
-  }
-
-  renderSlider(label, name, min, max, step) {
+  
+  renderDropdown(label, key, options) {
     return html`
-      <div class="slider-container">
-        <div class="slider-label">${label}:</div>
-        <wired-slider
-          min=${min}
-          max=${max}
-          step=${step}
-          .value=${this[name]}
-          @input=${(e) => this.updateAttribute(name, e.target.value)}
-        ></wired-slider>
+      <div class="dropdown-container">
+        <label>${label}:</label>
+        <wired-combo
+          .selected=${this[key]}
+          @selected=${(e) => this._updateSeed(key, e.detail.selected)}
+        >
+          ${options.map(
+            (option) =>
+              html`<wired-item value=${option}>${option}</wired-item>`
+          )}
+        </wired-combo>
+      </div>
+    `;
+  }
+
+  renderHatDropdown() {
+    const hats = [
+      "none",
+      "bunny",
+      "coffee",
+      "construction",
+      "cowboy",
+      "education",
+      "knight",
+      "ninja",
+      "party",
+      "pirate",
+      "watermelon",
+    ];
+    return html`
+      <div class="dropdown-container">
+        <label>Hat:</label>
+        <wired-combo
+          .selected=${this.hat}
+          @selected=${(e) => (this.hat = e.detail.selected)}
+        >
+          ${hats.map(
+            (hat) => html`<wired-item value=${hat}>${hat}</wired-item>`
+          )}
+        </wired-combo>
       </div>
     `;
   }
@@ -136,6 +159,7 @@ class HaxRpg extends LitElement {
         <div class="character-panel">
           <rpg-character
             .seed=${this.seed}
+            .hat=${this.hat}
             .fire=${this.onFire}
             .walking=${this.walking}
             .circle=${this.circle}
@@ -145,30 +169,37 @@ class HaxRpg extends LitElement {
 
         <!-- Form Panel -->
         <div class="form-panel">
-          ${this.renderSlider('Accessories', 'accessories', 0, 9, 1)}
-          ${this.renderSlider('Base', 'base', 1, 5, 1)}
-          ${this.renderSlider('Face', 'face', 0, 5, 1)}
-          ${this.renderSlider('Face Item', 'faceitem', 0, 9, 1)}
-          ${this.renderSlider('Hair', 'hair', 0, 9, 1)}
-          ${this.renderSlider('Pants', 'pants', 0, 9, 1)}
-          ${this.renderSlider('Shirt', 'shirt', 0, 9, 1)}
-          ${this.renderSlider('Skin', 'skin', 0, 9, 1)}
-          ${this.renderSlider('Hat Color', 'hatcolor', 0, 9, 1)}
+          ${this.renderDropdown('Accessories', 'accessories', Array.from({ length: 10 }, (_, i) => i))}
+          ${this.renderDropdown('Base', 'base', Array.from({ length: 5 }, (_, i) => i + 1))}
+          ${this.renderDropdown('Face', 'face', Array.from({ length: 6 }, (_, i) => i))}
+          ${this.renderDropdown('Face Item', 'faceitem', Array.from({ length: 10 }, (_, i) => i))}
+          ${this.renderDropdown('Hair', 'hair', Array.from({ length: 10 }, (_, i) => i))}
+          ${this.renderDropdown('Pants', 'pants', Array.from({ length: 10 }, (_, i) => i))}
+          ${this.renderDropdown('Shirt', 'shirt', Array.from({ length: 10 }, (_, i) => i))}
+          ${this.renderDropdown('Skin', 'skin', Array.from({ length: 10 }, (_, i) => i))}
+          ${this.renderDropdown('Hat Color', 'hatcolor', Array.from({ length: 10 }, (_, i) => i))}
+          ${this.renderHatDropdown()}
 
           <wired-checkbox
             .checked=${this.onFire}
             @input=${(e) => (this.onFire = e.target.checked)}
-          >On Fire?</wired-checkbox>
+          >
+            On Fire?
+          </wired-checkbox>
 
           <wired-checkbox
             .checked=${this.walking}
             @input=${(e) => (this.walking = e.target.checked)}
-          >Walking?</wired-checkbox>
+          >
+            Walking?
+          </wired-checkbox>
 
           <wired-checkbox
             .checked=${this.circle}
             @input=${(e) => (this.circle = e.target.checked)}
-          >Circle?</wired-checkbox>
+          >
+            Circle?
+          </wired-checkbox>
 
           <wired-button @click=${() => this.generateShareableLink()}>
             Share Character
@@ -179,14 +210,21 @@ class HaxRpg extends LitElement {
   }
 
   generateShareableLink() {
-    const params = new URLSearchParams({
-      seed: this.seed,
-      fire: this.onFire,
-      walking: this.walking,
-      circle: this.circle,
-    });
-    const url = `${window.location.origin}?${params.toString()}`;
-    navigator.clipboard.writeText(url).then(() => alert('Link copied to clipboard!'));
+    try {
+      const params = new URLSearchParams({
+        seed: this.seed,
+        hat: this.hat,
+        fire: this.onFire,
+        walking: this.walking,
+        circle: this.circle,
+      });
+      const url = `${window.location.origin}?${params.toString()}`;
+      navigator.clipboard.writeText(url).then(() => {
+        alert('Link copied to clipboard!');
+      });
+    } catch (error) {
+      console.error('Error generating shareable link:', error);
+    }
   }
 }
 
