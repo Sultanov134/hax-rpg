@@ -5,7 +5,7 @@ import 'wired-elements/lib/wired-checkbox.js';
 import 'wired-elements/lib/wired-button.js';
 import "@haxtheweb/rpg-character/rpg-character.js";
 
-class HaxRpg extends LitElement {
+class RpgMe extends LitElement {
   static get properties() {
     return {
       seed: { type: String },
@@ -310,4 +310,4 @@ class HaxRpg extends LitElement {
 }
 
 
-customElements.define('hax-rpg', HaxRpg);
+customElements.define('rpg-me', RpgMe);
