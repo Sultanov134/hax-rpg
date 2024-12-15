@@ -4,8 +4,12 @@ import 'wired-elements/lib/wired-item.js';
 import 'wired-elements/lib/wired-checkbox.js';
 import 'wired-elements/lib/wired-button.js';
 import "@haxtheweb/rpg-character/rpg-character.js";
+import {DDDSuper} from "@haxtheweb/d-d-d/d-d-d.js";
 
-class RpgMe extends LitElement {
+export class RpgMe extends DDDSuper(LitElement) {
+  static get tag() {
+    return "rpg-me"
+  }
   static get properties() {
     return {
       seed: { type: String },
@@ -22,6 +26,7 @@ class RpgMe extends LitElement {
       onFire: { type: Boolean },
       walking: { type: Boolean },
       circle: { type: Boolean },
+      characterSize: { type: String},
     };
   }
 
@@ -46,76 +51,165 @@ class RpgMe extends LitElement {
     this.characterSize = 300;
   }
 
-  static get styles () { 
+  static get styles() {
     return css`
- :host {
-      display: block;
-      font-family: Arial, sans-serif;
-    }
-
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 16px;
-      gap: 16px;
-    }
-    wired-item {
-      opacity: 1;
-    }
-
-    .character-panel {
-      flex: 1 1 60%;
-      max-width: 600px;
-      padding: 16px;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      background-color: #f9f9f9;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .character-panel rpg-character {
-    
-      margin-bottom: 16px;
-    }
-
-    .zoom-buttons {
-      display: flex;
-      gap: 16px;
-    }
-
-    .form-panel {
-      flex: 1 1 35%;
-      padding: 16px;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      background-color: #f9f9f9;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    @media (max-width: 768px) {
+      :host {
+        display: block;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f6f9;
+        color: #333;
+        min-height: 100vh;
+      }
+  
       .container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center; /* Horizontally center */
+        align-items: center; /* Vertically center */
+        gap: 30px;
+        padding: 20px;
+        box-sizing: border-box;
+        min-height: 100vh; /* Ensure container takes up full screen height */
+      }
+  
+      @media (max-width: 768px) {
+        .container {
+          flex-direction: column; /* Stack containers vertically on small screens */
+          justify-content: center;
+          align-items: center;
+          padding: 10px;
+        }
+      }
+  
+      .character-panel {
+        flex: 1;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        padding: 20px;
+        display: flex;
         flex-direction: column;
-        align-items: stretch;
+        justify-content: center;
+        align-items: center;
+        min-height: 400px;
+        margin-right: 10px;
+        overflow: hidden; /* Prevent overflow */
+        position: relative;
       }
-
-      .character-panel,
+  
+      .character-wrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        position: relative;
+      }
+  
+      .character-panel rpg-character {
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+  
+      .character-panel .seed-text {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #444;
+        margin-top: 10px;
+        text-align: center;
+      }
+  
+      .size-controls {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 10px;
+      }
+  
+      .size-controls wired-button {
+        font-size: 1rem;
+        padding: 5px 10px;
+        background-color: white;
+        color: #333;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+      }
+  
+      .size-controls wired-button:hover {
+        background-color: #f8f8f8;
+        transform: scale(1.05);
+      }
+  
       .form-panel {
-        flex: 1 1 100%;
-        max-width: none;
+        flex: 1;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        padding: 20px;
       }
-    }
-  `;
+  
+      .form-panel h3 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #444;
+      }
+  
+      .dropdown-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 15px;
+      }
+  
+      .dropdown-container label {
+        font-size: 1rem;
+        color: #666;
+      }
+  
+      wired-combo {
+        flex: 1;
+        margin-left: 10px;
+      }
+  
+      wired-checkbox {
+        margin-bottom: 10px;
+        font-size: 1rem;
+      }
+  
+      wired-button {
+        background-color: white;
+        color: #333;
+        font-size: 0.9rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 8px 12px;
+        text-align: center;
+        box-shadow: none;
+        transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+      }
+  
+      wired-button:hover {
+        background-color: #f8f8f8;
+        border-color: #999;
+        transform: scale(1.02);
+      }
+  
+      .button-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+      }
+    `;
   }
-
- 
+  
   
 
   _getSeedIndex(key) {
@@ -133,6 +227,14 @@ class RpgMe extends LitElement {
     return mapping[key] ?? -1;
   }
 
+  increaseSize() {
+    this.characterSize = Math.min(this.characterSize + 20, 400);
+  }
+
+  decreaseSize() {
+    this.characterSize = Math.max(this.characterSize - 20, 100);
+  }
+
   _updateSeed(key, value) {
     if (this[key] !== value) {
       this[key] = value;
@@ -140,7 +242,7 @@ class RpgMe extends LitElement {
       const index = this._getSeedIndex(key);
       if (index >= 0) {
         seedArray[index] = value.toString();
-        seedArray[2] = "0"; // Ensure leg is always 0
+        seedArray[2] = "0"; 
         const newSeed = seedArray.join("");
         if (this.seed !== newSeed) {
           this.seed = newSeed;
@@ -182,6 +284,7 @@ class RpgMe extends LitElement {
       "pirate",
       "watermelon",
     ];
+
     return html`
       <div class="dropdown-container">
         <label>Hat:</label>
@@ -197,23 +300,7 @@ class RpgMe extends LitElement {
     `;
   }
 
-  // generateLink() {
-  //   try {
-  //     const params = new URLSearchParams({
-  //       seed: this.seed,
-  //       hat: this.hat,
-  //       fire: this.onFire,
-  //       walking: this.walking,
-  //       circle: this.circle,
-  //     });
-  //     const url = `${window.location.origin}?${params.toString()}`;
-  //     navigator.clipboard.writeText(url).then(() => {
-  //       alert("Link copied to clipboard!");
-  //     });
-  //   } catch (error) {
-  //     console.error("Error generating shareable link:", error);
-  //   }
-  // }
+
 
   generateLink() {
     try {
@@ -224,12 +311,21 @@ class RpgMe extends LitElement {
         walking: this.walking,
         circle: this.circle,
       });
-      return `${window.location.origin}?${params.toString()}`;
+      const url = `${window.location.origin}?${params.toString()}`;
+  
+   
+      navigator.clipboard.writeText(url).then(() => {
+        alert("Link copied to clipboard!");
+      }).catch((err) => {
+        console.error("Failed to copy link:", err);
+        alert(`Could not copy the link. Here it is: ${url}`);
+      });
     } catch (error) {
       console.error("Error generating shareable link:", error);
-      return '';
+      alert("An unexpected error occurred while generating the link.");
     }
   }
+  
 
   shareToTwitter() {
     const url = this.generateLink();
@@ -243,10 +339,12 @@ class RpgMe extends LitElement {
     const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
     window.open(linkedInUrl, "_blank");
   }
+
   render() {
     return html`
       <div class="container">
-        <div class="character-panel">
+      <div class="character-panel">
+        <div class="character-wrapper">
           <rpg-character
             literalseed
             .seed=${this.seed}
@@ -254,12 +352,20 @@ class RpgMe extends LitElement {
             .fire=${this.onFire}
             .walking=${this.walking}
             .circle=${this.circle}
+            style="transform: scale(${this.characterSize / 300}); transform-origin: center;"
           ></rpg-character>
-          <p>Seed: ${this.seed}</p>
         </div>
+        <div class="seed-text">Seed: ${this.seed}</div>
+        <div class="size-controls">
+          <wired-button @click=${this.decreaseSize}>-</wired-button>
+          <wired-button @click=${this.increaseSize}>+</wired-button>
+        </div>
+      </div>
+
+
         <div class="form-panel">
           ${this.renderDropdown('Accessories', 'accessories', Array.from({ length: 10 }, (_, i) => i))}
-          ${this.renderDropdown('Base', 'base', Array.from({ length: 5 }, (_, i) => i + 1))}
+          ${this.renderDropdown('Base', 'base', Array.from({ length: 10 }, (_, i) => i))}
           ${this.renderDropdown('Face', 'face', Array.from({ length: 6 }, (_, i) => i))}
           ${this.renderDropdown('Face Item', 'faceitem', Array.from({ length: 10 }, (_, i) => i))}
           ${this.renderDropdown('Hair', 'hair', Array.from({ length: 10 }, (_, i) => i))}
