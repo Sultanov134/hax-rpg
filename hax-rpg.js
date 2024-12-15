@@ -197,6 +197,24 @@ class HaxRpg extends LitElement {
     `;
   }
 
+  // generateLink() {
+  //   try {
+  //     const params = new URLSearchParams({
+  //       seed: this.seed,
+  //       hat: this.hat,
+  //       fire: this.onFire,
+  //       walking: this.walking,
+  //       circle: this.circle,
+  //     });
+  //     const url = `${window.location.origin}?${params.toString()}`;
+  //     navigator.clipboard.writeText(url).then(() => {
+  //       alert("Link copied to clipboard!");
+  //     });
+  //   } catch (error) {
+  //     console.error("Error generating shareable link:", error);
+  //   }
+  // }
+
   generateLink() {
     try {
       const params = new URLSearchParams({
@@ -206,15 +224,25 @@ class HaxRpg extends LitElement {
         walking: this.walking,
         circle: this.circle,
       });
-      const url = `${window.location.origin}?${params.toString()}`;
-      navigator.clipboard.writeText(url).then(() => {
-        alert("Link copied to clipboard!");
-      });
+      return `${window.location.origin}?${params.toString()}`;
     } catch (error) {
       console.error("Error generating shareable link:", error);
+      return '';
     }
   }
 
+  shareToTwitter() {
+    const url = this.generateLink();
+    const text = encodeURIComponent("Check out my cool new character!");
+    const xUrl = `https://x.com/intent/post?text=${text}&url=${encodeURIComponent(url)}`;
+    window.open(xUrl, "_blank");
+  }
+
+  shareToLinkedIn() {
+    const url = this.generateLink();
+    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+    window.open(linkedInUrl, "_blank");
+  }
   render() {
     return html`
       <div class="container">
@@ -261,10 +289,20 @@ class HaxRpg extends LitElement {
           >
             Circle?
           </wired-checkbox>
-
+        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px">
+          
           <wired-button @click=${() => this.generateLink()}>
             Share Character
           </wired-button>
+
+          <wired-button @click=${this.shareToTwitter}>
+            Share on X
+          </wired-button>
+
+          <wired-button @click=${this.shareToLinkedIn}>
+            Share on LinkedIn
+          </wired-button>
+          </div>
         </div>
       </div>
     `;
