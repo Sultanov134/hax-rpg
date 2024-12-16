@@ -54,23 +54,24 @@ export class RpgMe extends DDDSuper(LitElement) {
   static get styles() {
     return css`
       :host {
-        color-scheme: light dark;
         display: block;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background-color: light-dark(#efedea, #223a2c);
-        color: light-dark(#333, #f4f6f9);
-        min-height: 100vh;
+        font: var(--ddd-font-primary);
+        background-color: light-dark(var(--ddd-theme-default-white), var(--ddd-theme-default-success));
+        color: light-dark(var(--ddd-theme-default-potentialMidnight), var(--ddd-theme-default-white));
+        min-height: 900px;
       }
+
+   
 
       .container {
         display: flex;
         flex-direction: row;
         justify-content: center;
         align-items: flex-start;
-        gap: 30px;
-        padding: 20px;
+        gap: var(--ddd-spacing-8);
+        padding: var(--ddd-spacing-5);
         box-sizing: border-box;
-        min-height: 100vh;
+        min-height: 900px;
       }
 
       @media (max-width: 768px) {
@@ -78,17 +79,17 @@ export class RpgMe extends DDDSuper(LitElement) {
           flex-direction: column;
           align-items: center;
           justify-content: flex-start;
-          padding: 10px;
-          gap: 15px;
+          padding: var(--ddd-spacing-3);
+          gap: var(--ddd-spacing-4);
         }
       }
 
       .character-panel, .form-panel {
         flex: 1;
-        background: light-dark(#ffffff, #2d2d2d);
-        border-radius: 12px;
+        background: light-dark(var(--ddd-theme-default-white), var(--ddd-theme-default-navy40));
+        border-radius: var(--ddd-spacing-3);
         box-shadow: 0 8px 16px light-dark(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.5));
-        padding: 20px;
+        padding: var(--ddd-spacing-5);
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -101,6 +102,14 @@ export class RpgMe extends DDDSuper(LitElement) {
         overflow: hidden;
       }
 
+      wired-item {
+        background-color: light-dark(var(--ddd-theme-default-white), var(--ddd-theme-default-limestoneGray));
+        color: light-dark(var(--ddd-theme-default-limestoneGray), var(--ddd-theme-default-white));
+      }
+      wired-item:hover {
+        background-color: light-dark(var(--ddd-theme-default-white), var(--ddd-theme-default-limestoneGray));
+        color: light-dark(var(--ddd-theme-default-potentialMidnight), var(--ddd-theme-default-white));
+      }
       .character-wrapper {
         width: 75%;
         height: 350px;
@@ -119,76 +128,76 @@ export class RpgMe extends DDDSuper(LitElement) {
       }
 
       .character-panel .seed-text {
-        font-size: 1.2rem;
+        font-size: var(--ddd-spacing-5);
         font-weight: bold;
-        color: light-dark(#444, #e0e0e0);
-        margin-top: 10px;
+        color: light-dark(var(--ddd-theme-default-potentialMidnight), var(--ddd-theme-default-white));
+        margin-top: var(--ddd-spacing-3);
         text-align: center;
       }
 
       .size-controls {
         display: flex;
         justify-content: center;
-        gap: 10px;
-        margin-top: 10px;
+        gap: var(--ddd-spacing-3);
+        margin-top: var(--ddd-spacing-3);
       }
 
       .size-controls wired-button {
-        font-size: 1rem;
-        background-color: light-dark(#ffffff, #444);
-        color: light-dark(#333, #f0f0f0);
-        border: 1px solid light-dark(#ccc, #555);
+        font-size: var(--ddd-spacing-4);
+        background-color: light-dark(var(--ddd-theme-default-white), var(--ddd-theme-default-navy70));
+        color: light-dark(var(--ddd-theme-default-potentialMidnight), var(--ddd-theme-default-white));
+        border: 1px solid light-dark(var(--ddd-theme-default-white), var(--ddd-theme-default-limestoneGray));
         border-radius: 6px;
         transition: background-color 0.2s ease, transform 0.2s ease;
       }
 
       .size-controls wired-button:hover {
-        background-color: light-dark(#f8f8f8, #555);
+        background-color: light-dark(var(--ddd-theme-default-white), var(--ddd-theme-default-limestoneGray));
         transform: scale(1.05);
       }
 
       .form-panel h3 {
-        font-size: 1.5rem;
-        margin-bottom: 20px;
+        font-size: var(--ddd-spacing-6);
+        margin-bottom: var(--ddd-spacing-5);
         text-align: center;
-        color: light-dark(#444, #e0e0e0);
+        color: light-dark(var(--ddd-theme-default-limestoneGray), var(--ddd-theme-default-white));
       }
 
       .dropdown-container {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 15px;
+        margin-bottom: var(--ddd-spacing-4);
       }
 
       .dropdown-container label {
-        font-size: 1rem;
-        color: light-dark(#666, #aaa);
+        font-size: var(--ddd-spacing-4);
+        color: light-dark(var(--ddd-theme-default-potential75), var(--ddd-theme-default-white));
       }
 
       wired-combo {
         flex: 1;
-        margin-left: 10px;
+        margin-left: var(--ddd-spacing-3);
       }
 
       wired-checkbox {
-        margin-bottom: 10px;
-        font-size: 1rem;
-        color: light-dark(#444, #ddd);
+        margin-bottom: var(--ddd-spacing-3);
+        font-size: var(--ddd-spacing-4);
+        color: light-dark(var(--ddd-theme-default-potential75), var(--ddd-theme-default-white));
       }
 
       wired-button {
-        background-color: light-dark(#ffffff, #444);
-        color: light-dark(#333, #f0f0f0);
-        font-size: 0.9rem;
-        border: 1px solid light-dark(#ccc, #555);
+        background-color: light-dark(var(--ddd-theme-default-white), var(--ddd-theme-default-navy70));
+        color: light-dark(var(--ddd-theme-default-potentialMidnight), var(--ddd-theme-default-white));
+        font-size: var(--ddd-spacing-4);
+        border: var(--ddd-spacing-1)/2.5 solid light-dark(var(--ddd-theme-default-white), var(--ddd-theme-default-limestoneGray));
         border-radius: 8px;
         transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
       }
 
       wired-button:hover {
-        background-color: light-dark(#f8f8f8, #555);
-        border-color: light-dark(#999, #777);
+        background-color: light-dark(var(--ddd-theme-default-white), var(--ddd-theme-default-limestoneGray));
+        border-color: light-dark(var(--ddd-theme-default-white), var(--ddd-theme-default-limestoneGray));
         transform: scale(1.02);
       }
 
@@ -196,7 +205,7 @@ export class RpgMe extends DDDSuper(LitElement) {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 5px;
+        gap: var(--ddd-spacing-2);
       }
     `;
 }
