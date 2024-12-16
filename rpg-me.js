@@ -54,59 +54,62 @@ export class RpgMe extends DDDSuper(LitElement) {
   static get styles() {
     return css`
       :host {
+        color-scheme: light dark;
         display: block;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f4f6f9;
-        color: #333;
+        background-color: light-dark(#efedea, #223a2c);
+        color: light-dark(#333, #f4f6f9);
         min-height: 100vh;
       }
-  
+
       .container {
         display: flex;
         flex-direction: row;
-        justify-content: center; /* Horizontally center */
-        align-items: center; /* Vertically center */
+        justify-content: center;
+        align-items: flex-start;
         gap: 30px;
         padding: 20px;
         box-sizing: border-box;
-        min-height: 100vh; /* Ensure container takes up full screen height */
+        min-height: 100vh;
       }
-  
+
       @media (max-width: 768px) {
         .container {
-          flex-direction: column; /* Stack containers vertically on small screens */
-          justify-content: center;
+          flex-direction: column;
           align-items: center;
+          justify-content: flex-start;
           padding: 10px;
+          gap: 15px;
         }
       }
-  
-      .character-panel {
+
+      .character-panel, .form-panel {
         flex: 1;
-        background: white;
+        background: light-dark(#ffffff, #2d2d2d);
         border-radius: 12px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 8px 16px light-dark(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.5));
         padding: 20px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        min-height: 400px;
-        margin-right: 10px;
-        overflow: hidden; /* Prevent overflow */
-        position: relative;
+        min-height: 500px;
+        box-sizing: border-box;
       }
-  
+
+      .character-panel {
+        overflow: hidden;
+      }
+
       .character-wrapper {
-        width: 100%;
-        height: 100%;
+        width: 75%;
+        height: 350px;
         display: flex;
         justify-content: center;
         align-items: center;
         overflow: hidden;
-        position: relative;
       }
-  
+
       .character-panel rpg-character {
         width: auto;
         height: auto;
@@ -114,101 +117,90 @@ export class RpgMe extends DDDSuper(LitElement) {
         max-height: 100%;
         object-fit: contain;
       }
-  
+
       .character-panel .seed-text {
         font-size: 1.2rem;
         font-weight: bold;
-        color: #444;
+        color: light-dark(#444, #e0e0e0);
         margin-top: 10px;
         text-align: center;
       }
-  
+
       .size-controls {
         display: flex;
         justify-content: center;
         gap: 10px;
         margin-top: 10px;
       }
-  
+
       .size-controls wired-button {
         font-size: 1rem;
-        padding: 5px 10px;
-        background-color: white;
-        color: #333;
-        border: 1px solid #ccc;
+        background-color: light-dark(#ffffff, #444);
+        color: light-dark(#333, #f0f0f0);
+        border: 1px solid light-dark(#ccc, #555);
         border-radius: 6px;
         transition: background-color 0.2s ease, transform 0.2s ease;
       }
-  
+
       .size-controls wired-button:hover {
-        background-color: #f8f8f8;
+        background-color: light-dark(#f8f8f8, #555);
         transform: scale(1.05);
       }
-  
-      .form-panel {
-        flex: 1;
-        background: #ffffff;
-        border-radius: 12px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-        padding: 20px;
-      }
-  
+
       .form-panel h3 {
         font-size: 1.5rem;
         margin-bottom: 20px;
         text-align: center;
-        color: #444;
+        color: light-dark(#444, #e0e0e0);
       }
-  
+
       .dropdown-container {
         display: flex;
         align-items: center;
         justify-content: space-between;
         margin-bottom: 15px;
       }
-  
+
       .dropdown-container label {
         font-size: 1rem;
-        color: #666;
+        color: light-dark(#666, #aaa);
       }
-  
+
       wired-combo {
         flex: 1;
         margin-left: 10px;
       }
-  
+
       wired-checkbox {
         margin-bottom: 10px;
         font-size: 1rem;
+        color: light-dark(#444, #ddd);
       }
-  
+
       wired-button {
-        background-color: white;
-        color: #333;
+        background-color: light-dark(#ffffff, #444);
+        color: light-dark(#333, #f0f0f0);
         font-size: 0.9rem;
-        border: 1px solid #ccc;
+        border: 1px solid light-dark(#ccc, #555);
         border-radius: 8px;
-        padding: 8px 12px;
-        text-align: center;
-        box-shadow: none;
         transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
       }
-  
+
       wired-button:hover {
-        background-color: #f8f8f8;
-        border-color: #999;
+        background-color: light-dark(#f8f8f8, #555);
+        border-color: light-dark(#999, #777);
         transform: scale(1.02);
       }
-  
+
       .button-group {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
         justify-content: center;
-        margin-top: 20px;
+        gap: 5px;
       }
     `;
-  }
+}
+
   
   
 
@@ -228,7 +220,7 @@ export class RpgMe extends DDDSuper(LitElement) {
   }
 
   increaseSize() {
-    this.characterSize = Math.min(this.characterSize + 20, 400);
+    this.characterSize = Math.min(this.characterSize + 20, 500);
   }
 
   decreaseSize() {
@@ -312,26 +304,37 @@ export class RpgMe extends DDDSuper(LitElement) {
         circle: this.circle,
       });
       const url = `${window.location.origin}?${params.toString()}`;
-  
-   
-      navigator.clipboard.writeText(url).then(() => {
-        alert("Link copied to clipboard!");
-      }).catch((err) => {
-        console.error("Failed to copy link:", err);
-        alert(`Could not copy the link. Here it is: ${url}`);
-      });
+      return url;
     } catch (error) {
-      console.error("Error generating shareable link:", error);
-      alert("An unexpected error occurred while generating the link.");
+      console.error("Error generating link:", error);
+      return "";
     }
-  }
+    }
   
 
+
+  shareTheLink() {
+    const url = this.generateLink();
+    navigator.clipboard.writeText(url).then(() => {
+      alert("Link copied to clipboard!");
+    }).catch((err) => {
+      console.error("Failed to copy link:", err);
+      alert("An unexpected error occured while generating the link.");
+    })
+
+  }
+  
   shareToTwitter() {
     const url = this.generateLink();
     const text = encodeURIComponent("Check out my cool new character!");
     const xUrl = `https://x.com/intent/post?text=${text}&url=${encodeURIComponent(url)}`;
     window.open(xUrl, "_blank");
+  }
+
+  shareToReddit() {
+    const url = this.generateLink();
+    const redditUrl = `https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent("Check out this cool RPG character I made!")}`;
+    window.open(redditUrl, "_blank");
   }
 
   shareToLinkedIn() {
@@ -395,10 +398,10 @@ export class RpgMe extends DDDSuper(LitElement) {
           >
             Circle?
           </wired-checkbox>
-        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px">
+        <div class="button-group">
           
-          <wired-button @click=${() => this.generateLink()}>
-            Share Character
+          <wired-button @click=${() => this.shareTheLink()}>
+            Copy to clipboard
           </wired-button>
 
           <wired-button @click=${this.shareToTwitter}>
@@ -407,6 +410,10 @@ export class RpgMe extends DDDSuper(LitElement) {
 
           <wired-button @click=${this.shareToLinkedIn}>
             Share on LinkedIn
+          </wired-button>
+
+          <wired-button @click=${this.shareToReddit}>
+            Share on Reddit
           </wired-button>
           </div>
         </div>
