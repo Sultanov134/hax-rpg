@@ -87,8 +87,8 @@ export class RpgMe extends DDDSuper(LitElement) {
       .character-panel, .form-panel {
         flex: 1;
         background: light-dark(var(--ddd-theme-default-white), var(--ddd-theme-default-navy40));
-        border-radius: var(--ddd-spacing-3);
-        box-shadow: 0 8px 16px light-dark(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.5));
+        border-radius: var(--ddd-radius-sm);
+        box-shadow: var(--ddd-spacing-0) var(--ddd-spacing-2) var(--ddd-spacing-4) light-dark(var(--ddd-boxShadow-md), var(--ddd-boxShadow-lg));
         padding: var(--ddd-spacing-5);
         display: flex;
         flex-direction: column;
@@ -129,7 +129,7 @@ export class RpgMe extends DDDSuper(LitElement) {
 
       .character-panel .seed-text {
         font-size: var(--ddd-spacing-5);
-        font-weight: bold;
+        font-weight: var(--ddd-font-weight-bold);
         color: light-dark(var(--ddd-theme-default-potentialMidnight), var(--ddd-theme-default-white));
         margin-top: var(--ddd-spacing-3);
         text-align: center;
@@ -146,8 +146,8 @@ export class RpgMe extends DDDSuper(LitElement) {
         font-size: var(--ddd-spacing-4);
         background-color: light-dark(var(--ddd-theme-default-white), var(--ddd-theme-default-navy70));
         color: light-dark(var(--ddd-theme-default-potentialMidnight), var(--ddd-theme-default-white));
-        border: 1px solid light-dark(var(--ddd-theme-default-white), var(--ddd-theme-default-limestoneGray));
-        border-radius: 6px;
+        border: var(--ddd-spacing-1)/2 solid light-dark(var(--ddd-theme-default-white), var(--ddd-theme-default-limestoneGray));
+        border-radius: var(--ddd-radius-sm);
         transition: background-color 0.2s ease, transform 0.2s ease;
       }
 
@@ -191,7 +191,7 @@ export class RpgMe extends DDDSuper(LitElement) {
         color: light-dark(var(--ddd-theme-default-potentialMidnight), var(--ddd-theme-default-white));
         font-size: var(--ddd-spacing-4);
         border: var(--ddd-spacing-1)/2.5 solid light-dark(var(--ddd-theme-default-white), var(--ddd-theme-default-limestoneGray));
-        border-radius: 8px;
+        border-radius: var(--ddd-radius-sm);
         transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
       }
 
